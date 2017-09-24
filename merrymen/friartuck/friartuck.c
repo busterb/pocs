@@ -50,7 +50,7 @@ int main(int argc, char **argv)
     struct sockaddr_in echoServAddr; /* Local address */
     struct sockaddr_in echoClntAddr; /* Client address */
     unsigned short echoServPort=5555;/* Server port */
-    unsigned int clntLen;            /* Length of client address data structure */
+    int clntLen;                     /* Length of client address data structure */
     WSADATA wsaData;                 /* Structure for WinSock setup communication */
 
     if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) /* Load Winsock 2.0 DLL */
@@ -69,12 +69,14 @@ int main(int argc, char **argv)
     echoServAddr.sin_port = htons(echoServPort);      /* Local port */
 
     /* Bind to the local address */
-    if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0)
+    if (bind(servSock, (struct sockaddr *) &echoServAddr, sizeof(echoServAddr)) < 0) {
         DieWithError("bind() failed");
+	}
 
     /* Mark the socket so it will listen for incoming connections */
-    if (listen(servSock, MAXPENDING) < 0)
+    if (listen(servSock, MAXPENDING) < 0) {
         DieWithError("listen() failed");
+	}
 
 	while (1)
 	{

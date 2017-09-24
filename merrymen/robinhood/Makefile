@@ -2,8 +2,8 @@ SRC=do_work.c service.c
 OBJ=$(SRC:.c=.o) # replaces the .c from SRC with .o
 EXE=robinhood.exe
 
-CC=gcc
-CFLAGS=-Wall -O2 -mno-cygwin
+CC=i686-w64-mingw32-gcc
+CFLAGS=-Wall -O2
 LDFLAGS=-lwsock32
 RM=rm
 
