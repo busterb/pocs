@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 
 	char errbuf[PCAP_ERRBUF_SIZE];
 	pcap_t *pcap = pcap_open_live(argv[1], PCAP_SNAP_LEN, 1, PCAP_TIMEOUT_MS, errbuf);
-    if (pcap == NULL) {
+	if (pcap == NULL) {
 		fprintf(stderr, "Error: %s\n", errbuf);
 		return 1;
 	}
@@ -74,26 +74,26 @@ int main(int argc, char **argv)
 	pthread_t stats_thread;
 	pthread_create(&stats_thread, NULL, stats_printer, &stats);
 
-    uint64_t start_us;
-    int rc = 0;
+	uint64_t start_us;
+	int rc = 0;
 
-    do {
-        /*
-         * Measure the time spent processing packets
-         */
-        start_us = time_us();
+	do {
+		/*
+		 * Measure the time spent processing packets
+		 */
+		start_us = time_us();
 
-        rc = pcap_dispatch(pcap, PCAP_MAX_PKT_BATCH, intf_rx_cb, (u_char *)&stats);
+		rc = pcap_dispatch(pcap, PCAP_MAX_PKT_BATCH, intf_rx_cb, (u_char *)&stats);
 
-        /*
-         * Determine if we should add additional sleep calls to get better
-         * batching behavior
-         */
-        uint64_t proc_us = time_us() - start_us;
-        if (rc > 0 && proc_us < PCAP_ACTIVE_PKT_SLEEP_US) {
-            usleep(PCAP_ACTIVE_PKT_SLEEP_US - proc_us);
-        } else if (rc == 0) {
-            usleep(PCAP_INACTIVE_PKT_SLEEP_US);
-        }
-    } while (rc >= 0);
+		/*
+		 * Determine if we should add additional sleep calls to get better
+		 * batching behavior
+		 */
+		uint64_t proc_us = time_us() - start_us;
+		if (rc > 0 && proc_us < PCAP_ACTIVE_PKT_SLEEP_US) {
+			usleep(PCAP_ACTIVE_PKT_SLEEP_US - proc_us);
+		} else if (rc == 0) {
+			usleep(PCAP_INACTIVE_PKT_SLEEP_US);
+		}
+	} while (rc >= 0);
 }
