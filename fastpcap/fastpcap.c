@@ -1,9 +1,13 @@
 /*
  * A low-CPU mechanism for doing line-rate packet capture with vanilla libpcap
  * using adaptive sleep to avoid too many syscalls. Works best with OSes that
- * have a shared-memory ring buffer mechanism, like Linux. With the default
- * parameters, you can process up to 100k packets at a time without a context
- * switch, at the expense of increased latency on a per-packet basis.
+ * have a shared-memory ring buffer mechanism, like Linux.
+ *
+ * This will process up to PCAP_BUFFER_PKTS packets at a time without a context
+ * switch, at the expense of increased latency on a per-packet basis. With
+ * these default parameters, it should be able to run at 10 gigabit rates with
+ * with normal traffic only a few percent CPU utilization. I haven't run it
+ * with a real network testing tool to validate max speed.
  *
  * gcc fastpcap.c  -lpcap -lpthread -Wall -o fastpcap
  *
